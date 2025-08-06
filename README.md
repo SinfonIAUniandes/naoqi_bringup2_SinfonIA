@@ -51,17 +51,23 @@ To use this package, you must have a ROS 2 workspace containing this package and
     rosdep install --from-paths src --ignore-src -r -y
     ```
 
-6.  **Build the workspace:**
+6.  **Install Python Dependencies:**
+    Install the required Python packages using `pip`.
+    ```bash
+    pip install -r src/naoqi_bringup2_sinfonIA/requirements.txt
+    ```
+
+7.  **Build the workspace:**
     Compile all the packages using `colcon`. Note that the robot mesh packages (`nao_meshes`, `pepper_meshes`) require accepting a license agreement. You can pre-accept it by setting environment variables.
     ```bash
     cd ~/ros2_naoqi_ws
     I_AGREE_TO_NAO_MESHES_LICENSE=1 I_AGREE_TO_PEPPER_MESHES_LICENSE=1 colcon build --symlink-install
     ```
 
-7.  **Source the workspace:**
+8.  **Source the workspace:**
     Before running the launch file, source your workspace's setup file.
     ```bash
-    source ~/ros2_naoqi_ws/install/setup.bash
+    source install/setup.bash
     ```
 
 ## Usage
