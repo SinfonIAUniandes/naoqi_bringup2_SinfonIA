@@ -34,9 +34,8 @@ To use this package, you must have a ROS 2 workspace containing this package and
 3.  **Download the `.repos` file:**
     You need to get the `sinfonia.repos` file that lists all project repositories. For example, using `wget`:
     ```bash
-    wget https://raw.githubusercontent.com/your-org/naoqi_bringup2_sinfonIA/main/sinfonia.repos
+    wget https://raw.githubusercontent.com/SinfonIAUniandes/naoqi_bringup2_SinfonIA/refs/heads/main/sinfonia.repos
     ```
-    *(Note: Replace the URL with the actual raw link to your `sinfonia.repos` file)*
 
 4.  **Clone all repositories:**
     Navigate into your `src` folder and use `vcs` to import all the repositories listed in the file.

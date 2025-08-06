@@ -6,7 +6,7 @@ repositories:
   # Core NAOqi Driver and Libraries
   naoqi_driver2:
     type: git
-    url: https://github.com/ros-naoqi/naoqi_driver2.git
+    url: https://github.com/SinfonIAUniandes/naoqi_driver2_sinfonIA.git
     version: master
   libqi:
     type: git
@@ -24,40 +24,34 @@ repositories:
     version: master
   naoqi_utilities_msgs:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_utilities_msgs repository
-    url: https://github.com/your-org/naoqi_utilities_msgs.git
+    url: https://github.com/SinfonIAUniandes/naoqi_utilities_msgs.git
     version: main
 
   # SinfonIA Utility Packages
   naoqi_manipulation:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_manipulation repository
-    url: https://github.com/your-org/naoqi_manipulation.git
+    url: https://github.com/SinfonIAUniandes/naoqi_manipulation.git
     version: main
   naoqi_miscellaneous:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_miscellaneous repository
-    url: https://github.com/your-org/naoqi_miscellaneous.git
+    url: https://github.com/SinfonIAUniandes/naoqi_miscellaneous.git
     version: main
   naoqi_navigation:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_navigation repository
-    url: https://github.com/your-org/naoqi_navigation.git
+    url: https://github.com/SinfonIAUniandes/naoqi_navigation.git
     version: main
   naoqi_perception:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_perception repository
-    url: https://github.com/your-org/naoqi_perception.git
+    url: https://github.com/SinfonIAUniandes/naoqi_perception.git
     version: main
   naoqi_speech:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_speech repository
-    url: https://github.com/your-org/naoqi_speech.git
+    url: https://github.com/SinfonIAUniandes/naoqi_speech.git
     version: main
 
   # Bringup Metapackage (this package)
   naoqi_bringup2_sinfonIA:
     type: git
     # IMPORTANT: Replace with the actual URL for your naoqi_bringup2_sinfonIA repository
-    url: https://github.com/your-org/naoqi_bringup2_sinfonIA.git
+    url: https://github.com/SinfonIAUniandes/naoqi_bringup2_SinfonIA.git
     version: main
