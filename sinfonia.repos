@@ -8,14 +8,14 @@ repositories:
     type: git
     url: https://github.com/SinfonIAUniandes/naoqi_driver2_sinfonIA.git
     version: main
-  libqi:
+  naoqi_libqi:
     type: git
     url: https://github.com/ros-naoqi/libqi.git
-    version: master
-  libqicore:
+    version: ros2
+  naoqi_libqicore:
     type: git
     url: https://github.com/ros-naoqi/libqicore.git
-    version: master
+    version: ros2
 
   # Message Packages
   naoqi_bridge_msgs:
