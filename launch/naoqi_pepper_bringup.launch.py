@@ -8,6 +8,7 @@ from launch.actions import (
     RegisterEventHandler,
     LogInfo,
 )
+from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, FindExecutable
@@ -22,9 +23,15 @@ def generate_launch_description():
     nao_port_arg = DeclareLaunchArgument(
         "nao_port", default_value="9559", description="Port number of the robot"
     )
+    launch_video_server_arg = DeclareLaunchArgument(
+        "launch_video_server",
+        default_value="true",
+        description="Launch the web_video_server for tablet streaming",
+    )
 
     nao_ip = LaunchConfiguration("nao_ip")
     nao_port = LaunchConfiguration("nao_port")
+    launch_video_server = LaunchConfiguration("launch_video_server")
 
     # --- Launch naoqi_driver ---
     naoqi_driver_launch = IncludeLaunchDescription(
@@ -81,6 +88,14 @@ def generate_launch_description():
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
         parameters=[{"video_server_ip": nao_ip}],
+    )
+
+    # --- Web Video Server Node ---
+    web_video_server_node = Node(
+        package="web_video_server",
+        executable="web_video_server",
+        name="web_video_server",
+        condition=IfCondition(launch_video_server),
     )
 
     # --- Initialization Sequence with Event Handlers ---
@@ -226,6 +241,7 @@ def generate_launch_description():
         [
             nao_ip_arg,
             nao_port_arg,
+            launch_video_server_arg,
             naoqi_driver_launch,
             naoqi_manipulation_node,
             naoqi_miscellaneous_node,
@@ -233,6 +249,7 @@ def generate_launch_description():
             naoqi_perception_node,
             naoqi_speech_node,
             naoqi_interface_node,
+            web_video_server_node,
         ]
         + startup_sequence_events
     )
