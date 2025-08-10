@@ -14,6 +14,7 @@ The system is composed of the following ROS 2 packages:
 *   **`naoqi_navigation`**: Handles robot base movement, including relative moves and map-based navigation.
 *   **`naoqi_perception`**: Controls perception-based actions like pointing at objects and tracking faces.
 *   **`naoqi_speech`**: Manages all audio functionalities, including text-to-speech (TTS), speech recognition, and sound playback.
+*   **`naoqi_interface`**: Handles interaction with the robot's tablet, such as displaying images, web pages, and video streams.
 *   **`naoqi_bridge_msgs` & `naoqi_utilities_msgs`**: Provide the custom ROS 2 message and service definitions required for communication across all packages.
 
 ## Installation
