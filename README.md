@@ -14,6 +14,7 @@ The system is composed of the following ROS 2 packages:
 *   **`naoqi_navigation`**: Handles robot base movement, including relative moves and map-based navigation.
 *   **`naoqi_perception`**: Controls perception-based actions like pointing at objects and tracking faces.
 *   **`naoqi_speech`**: Manages all audio functionalities, including text-to-speech (TTS), speech recognition, and sound playback.
+    > **Note**: For the Pepper robot (NAOqi 2.5), a specific node (`naoqi_pepper_speech_node`) is used as a workaround for a compatibility issue between the newer Python libraries and the older `ALMemory` event system. This workaround also means that this node handles touch sensor events (head, hands, bumpers) for Pepper, which are typically managed by `naoqi_driver` on NAO.
 *   **`naoqi_interface`**: Handles interaction with the robot's tablet, such as displaying images, web pages, and video streams.
 *   **`naoqi_bridge_msgs` & `naoqi_utilities_msgs`**: Provide the custom ROS 2 message and service definitions required for communication across all packages.
 

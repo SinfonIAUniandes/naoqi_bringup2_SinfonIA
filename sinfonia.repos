@@ -48,6 +48,10 @@ repositories:
     type: git
     url: https://github.com/SinfonIAUniandes/naoqi_speech.git
     version: main
+  naoqi_interface:
+    type: git
+    url: https://github.com/SinfonIAUniandes/naoqi_interface.git
+    version: main
 
   # Bringup Metapackage (this package)
   naoqi_bringup2_sinfonIA:
