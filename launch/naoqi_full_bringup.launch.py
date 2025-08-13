@@ -7,6 +7,7 @@ from launch.actions import (
     ExecuteProcess,
     RegisterEventHandler,
     LogInfo,
+    SetEnvironmentVariable,
 )
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -15,6 +16,11 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    # Set environment variable for the boot config file
+    set_boot_config_env = SetEnvironmentVariable(
+        "NAOQI_DRIVER_BOOT_CONFIG_FILE", "boot_config_NAO.json"
+    )
+
     # Declare launch arguments
     nao_ip_arg = DeclareLaunchArgument(
         "nao_ip", default_value="127.0.0.1", description="IP address of the robot"
@@ -196,6 +202,7 @@ def generate_launch_description():
 
     ld = LaunchDescription(
         [
+            set_boot_config_env,
             nao_ip_arg,
             nao_port_arg,
             naoqi_driver_launch,

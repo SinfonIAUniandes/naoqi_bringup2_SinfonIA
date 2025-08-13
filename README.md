@@ -73,24 +73,34 @@ To use this package, you must have a ROS 2 workspace containing this package and
 
 ## Usage
 
-The primary way to use this package is through the provided master launch file, `naoqi_full_bringup.launch.py`. This file starts all the necessary nodes and runs a startup sequence to place the robot in a safe, ready-to-operate state.
+The primary way to use this package is through the provided master launch files. These files start all the necessary nodes and run a startup sequence to place the robot in a safe, ready-to-operate state.
+
+### Launch Files and Robot Configuration
+
+This package includes two main launch files, one for each robot type:
+
+*   **`naoqi_full_bringup.launch.py`**: The launch file for the **NAO** robot.
+*   **`naoqi_pepper_bringup.launch.py`**: The launch file for the **Pepper** robot.
+
+A key part of the launch process is setting the `NAOQI_DRIVER_BOOT_CONFIG_FILE` environment variable. This variable tells the `naoqi_driver` which robot-specific configuration file to load. These files (`boot_config_NAO.json` and `boot_config_PEPPER.json`) define crucial parameters like which topics to publish, sensor data rates, and joint configurations, ensuring the driver is optimized for the specific robot being used.
 
 ### Launch Command
 
-To launch the entire system, run the following command, replacing `<your_robot_ip>` with your robot's actual IP address:
+To launch the entire system, choose the appropriate launch file for your robot and run the corresponding command, replacing `<your_robot_ip>` with your robot's actual IP address.
 
+**For NAO:**
 ```bash
 ros2 launch naoqi_bringup2_sinfonIA naoqi_full_bringup.launch.py nao_ip:=<your_robot_ip>
 ```
 
-**Example:**
+**For Pepper:**
 ```bash
-ros2 launch naoqi_bringup2_sinfonIA naoqi_full_bringup.launch.py nao_ip:=157.253.113.142
+ros2 launch naoqi_bringup2_sinfonIA naoqi_pepper_bringup.launch.py nao_ip:=<your_robot_ip>
 ```
 
 You can also specify the port if it's different from the default (`9559`):
 ```bash
-ros2 launch naoqi_bringup2_sinfonIA naoqi_full_bringup.launch.py nao_ip:=<your_robot_ip> nao_port:=<port>
+ros2 launch naoqi_bringup2_sinfonIA <launch_file> nao_ip:=<your_robot_ip> nao_port:=<port>
 ```
 
 ### Startup Sequence
@@ -103,5 +113,6 @@ Upon launching, the system performs a specific sequence of actions to initialize
 4.  **Robot Stands Up**: The robot is commanded to go to the `Stand` posture.
 5.  **Basic Awareness Disabled**: The robot's basic awareness (e.g., turning its head towards sounds) is disabled.
 6.  **Tracker Stopped**: Any active tracking is stopped to ensure the robot is in a neutral state.
+7.  **(Pepper Only)** **Initial Image Displayed**: An initial image is shown on the robot's tablet.
 
 After this sequence, you will see a confirmation message in the console, and the robot will be ready to receive commands via the various ROS 2 topics and services.

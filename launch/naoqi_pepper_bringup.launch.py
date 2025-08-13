@@ -7,15 +7,33 @@ from launch.actions import (
     ExecuteProcess,
     RegisterEventHandler,
     LogInfo,
+    SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, FindExecutable
 from launch_ros.actions import Node
+import socket
+
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # It doesn't actually send data — just triggers interface resolution
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    except Exception:
+        return "127.0.0.1"
+    finally:
+        s.close()
 
 
 def generate_launch_description():
+    # Set environment variable for the boot config file
+    set_boot_config_env = SetEnvironmentVariable(
+        "NAOQI_DRIVER_BOOT_CONFIG_FILE", "boot_config_PEPPER.json"
+    )
+
     # Declare launch arguments
     nao_ip_arg = DeclareLaunchArgument(
         "nao_ip", default_value="127.0.0.1", description="IP address of the robot"
@@ -32,6 +50,9 @@ def generate_launch_description():
     nao_ip = LaunchConfiguration("nao_ip")
     nao_port = LaunchConfiguration("nao_port")
     launch_video_server = LaunchConfiguration("launch_video_server")
+
+    # Get the host IP to be used by the video server
+    host_ip = get_local_ip()
 
     # --- Launch naoqi_driver ---
     naoqi_driver_launch = IncludeLaunchDescription(
@@ -87,7 +108,7 @@ def generate_launch_description():
         name="naoqi_interface_node",
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
-        parameters=[{"video_server_ip": nao_ip}],
+        parameters=[{"video_server_ip": host_ip}],
     )
 
     # --- Web Video Server Node ---
@@ -155,7 +176,18 @@ def generate_launch_description():
         shell=True,
     )
 
-    # 6. Show initial image on tablet
+    # 6. Stop the app launcher before showing an image
+    call_stop_app_launcher = ExecuteProcess(
+        cmd=[
+            [
+                FindExecutable(name="ros2"),
+                " service call /naoqi_interface_node/toggle_app_launcher std_srvs/srv/SetBool '{data: false}'",
+            ]
+        ],
+        shell=True,
+    )
+
+    # 7. Show initial image on tablet
     call_show_initial_image = ExecuteProcess(
         cmd=[
             [
@@ -220,6 +252,15 @@ def generate_launch_description():
                 target_action=call_stop_tracker,
                 on_completion=[
                     LogInfo(msg="Tracker stopped."),
+                    call_stop_app_launcher,
+                ],
+            )
+        ),
+        RegisterEventHandler(
+            OnExecutionComplete(
+                target_action=call_stop_app_launcher,
+                on_completion=[
+                    LogInfo(msg="App launcher stopped."),
                     call_show_initial_image,
                 ],
             )
@@ -239,6 +280,7 @@ def generate_launch_description():
 
     ld = LaunchDescription(
         [
+            set_boot_config_env,
             nao_ip_arg,
             nao_port_arg,
             launch_video_server_arg,
