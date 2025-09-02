@@ -25,6 +25,7 @@ To use this package, you must have a ROS 2 workspace containing this package and
 1.  **Install `vcs-tool`** (if you don't have it):
     ```bash
     sudo apt-get update && sudo apt-get install python3-vcstool
+    sudo apt-get install ros-jazzy-image-transport-plugins
     ```
 
 2.  **Create and navigate to your ROS 2 workspace:**
