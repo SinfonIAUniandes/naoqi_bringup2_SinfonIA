@@ -97,7 +97,7 @@ def generate_launch_description():
     )
     naoqi_pepper_speech_node = Node(
         package="naoqi_speech",
-        executable="naoqi_pepper_speech_node",
+        executable="naoqi_speech_node",
         name="naoqi_speech_node",
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
