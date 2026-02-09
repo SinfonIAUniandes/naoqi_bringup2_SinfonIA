@@ -64,7 +64,7 @@ To use this package, you must have a ROS 2 workspace containing this package and
     Compile all the packages using `colcon`. Note that the robot mesh packages (`nao_meshes`, `pepper_meshes`) require accepting a license agreement. You can pre-accept it by setting environment variables.
     ```bash
     cd ~/ros2_naoqi_ws
-    I_AGREE_TO_NAO_MESHES_LICENSE=1 I_AGREE_TO_PEPPER_MESHES_LICENSE=1 colcon build --symlink-install
+    colcon build --symlink-install
     ```
 
 8.  **Source the workspace:**
