@@ -11,7 +11,7 @@ from launch.actions import (
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, FindExecutable
+from launch.substitutions import LaunchConfiguration, FindExecutable, PythonExpression
 from launch_ros.actions import Node
 import socket
 import yaml
@@ -20,6 +20,10 @@ import yaml
 def load_config(path):
     with open(path, "r", encoding="utf-8") as config_file:
         return yaml.safe_load(config_file) or {}
+
+
+def scoped_service(namespace, service):
+    return PythonExpression(["'/' + '", namespace, "' + '", service, "' if '", namespace, "' else '", service, "'"])
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -103,6 +107,7 @@ def generate_launch_description():
         package="naoqi_manipulation",
         executable="naoqi_manipulation_node",
         name="naoqi_manipulation_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
     )
@@ -110,6 +115,7 @@ def generate_launch_description():
         package="naoqi_miscellaneous",
         executable="naoqi_miscellaneous_node",
         name="naoqi_miscellaneous_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
     )
@@ -117,6 +123,7 @@ def generate_launch_description():
         package="naoqi_navigation",
         executable="naoqi_navigation_node",
         name="naoqi_navigation_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
     )
@@ -124,6 +131,7 @@ def generate_launch_description():
         package="naoqi_perception",
         executable="naoqi_perception_node",
         name="naoqi_perception_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
     )
@@ -131,6 +139,7 @@ def generate_launch_description():
         package="naoqi_speech",
         executable="naoqi_speech_node",
         name="naoqi_speech_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
     )
@@ -138,6 +147,7 @@ def generate_launch_description():
         package="naoqi_interface",
         executable="naoqi_interface_node",
         name="naoqi_interface_node",
+        namespace=namespace,
         output="screen",
         arguments=["--ip", nao_ip, "--port", nao_port],
         parameters=[{"video_server_ip": host_ip}],
@@ -148,6 +158,7 @@ def generate_launch_description():
         package="web_video_server",
         executable="web_video_server",
         name="web_video_server",
+        namespace=namespace,
         condition=IfCondition(launch_video_server),
     )
 
@@ -158,7 +169,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_miscellaneous_node/toggle_blinking std_srvs/srv/SetBool '{data: true}'",
+                " service call ",
+                scoped_service(namespace, "/toggle_blinking"),
+                " std_srvs/srv/SetBool '{data: true}'",
             ]
         ],
         shell=True,
@@ -169,7 +182,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_miscellaneous_node/set_autonomous_state std_srvs/srv/SetBool '{data: false}'",
+                " service call ",
+                scoped_service(namespace, "/set_autonomous_state"),
+                " std_srvs/srv/SetBool '{data: false}'",
             ]
         ],
         shell=True,
@@ -180,7 +195,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_manipulation_node/go_to_posture naoqi_utilities_msgs/srv/GoToPosture '{posture_name: \"Stand\"}'",
+                " service call ",
+                scoped_service(namespace, "/go_to_posture"),
+                " naoqi_utilities_msgs/srv/GoToPosture '{posture_name: \"Stand\"}'",
             ]
         ],
         shell=True,
@@ -191,7 +208,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_miscellaneous_node/toggle_awareness std_srvs/srv/SetBool '{data: false}'",
+                " service call ",
+                scoped_service(namespace, "/toggle_awareness"),
+                " std_srvs/srv/SetBool '{data: false}'",
             ]
         ],
         shell=True,
@@ -202,7 +221,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_perception_node/set_tracker_mode naoqi_utilities_msgs/srv/SetTrackerMode '{mode: \"stop\"}'",
+                " service call ",
+                scoped_service(namespace, "/set_tracker_mode"),
+                " naoqi_utilities_msgs/srv/SetTrackerMode '{mode: \"stop\"}'",
             ]
         ],
         shell=True,
@@ -213,7 +234,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_interface_node/toggle_app_launcher std_srvs/srv/SetBool '{data: false}'",
+                " service call ",
+                scoped_service(namespace, "/toggle_app_launcher"),
+                " std_srvs/srv/SetBool '{data: false}'",
             ]
         ],
         shell=True,
@@ -224,7 +247,9 @@ def generate_launch_description():
         cmd=[
             [
                 FindExecutable(name="ros2"),
-                " service call /naoqi_interface_node/show_image naoqi_utilities_msgs/srv/SendURL \"{url: 'http://198.18.0.1/apps/robot-page/img/SinfonIA-Tablet.png'}\"",
+                " service call ",
+                scoped_service(namespace, "/show_image"),
+                " naoqi_utilities_msgs/srv/SendURL \"{url: 'http://198.18.0.1/apps/robot-page/img/SinfonIA-Tablet.png'}\"",
             ]
         ],
         shell=True,

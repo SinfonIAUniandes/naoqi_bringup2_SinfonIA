@@ -1,5 +1,5 @@
 bringup:
-  namespace: ""
+  namespace: "nao"
   driver:
     boot_config_file: boot_config_NAO.json
     command_topics:
