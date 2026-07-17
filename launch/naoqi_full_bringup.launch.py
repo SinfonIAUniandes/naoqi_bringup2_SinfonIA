@@ -7,30 +7,53 @@ from launch.actions import (
     ExecuteProcess,
     RegisterEventHandler,
     LogInfo,
-    SetEnvironmentVariable,
 )
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, FindExecutable
 from launch_ros.actions import Node
+import yaml
+
+
+def load_config(path):
+    with open(path, "r", encoding="utf-8") as config_file:
+        return yaml.safe_load(config_file) or {}
 
 
 def generate_launch_description():
-    # Set environment variable for the boot config file
-    set_boot_config_env = SetEnvironmentVariable(
-        "NAOQI_DRIVER_BOOT_CONFIG_FILE", "boot_config_NAO.json"
+    default_driver_params_file = os.path.join(
+        get_package_share_directory("naoqi_bringup2_sinfonIA"),
+        "config",
+        "naoqi_driver_nao.yaml",
     )
+    default_config = load_config(default_driver_params_file)
+    default_driver_params = default_config.get("naoqi_driver", {}).get("ros__parameters", {})
+    default_bringup = default_config.get("bringup", {})
+    default_command_topics = default_bringup.get("driver", {}).get("command_topics", {})
 
     # Declare launch arguments
     nao_ip_arg = DeclareLaunchArgument(
-        "nao_ip", default_value="127.0.0.1", description="IP address of the robot"
+        "nao_ip", default_value=str(default_driver_params.get("nao_ip", "127.0.0.1")), description="IP address of the robot"
     )
     nao_port_arg = DeclareLaunchArgument(
-        "nao_port", default_value="9559", description="Port number of the robot"
+        "nao_port", default_value=str(default_driver_params.get("nao_port", 9559)), description="Port number of the robot"
     )
+    namespace_arg = DeclareLaunchArgument(
+        "namespace", default_value=str(default_bringup.get("namespace", "")), description="ROS namespace for the robot"
+    )
+    driver_params_file_arg = DeclareLaunchArgument(
+        "driver_params_file",
+        default_value=default_driver_params_file,
+        description="YAML file with naoqi_driver converter settings",
+    )
+    driver_cmd_vel_topic_arg = DeclareLaunchArgument("driver_cmd_vel_topic", default_value=str(default_command_topics.get("cmd_vel_topic", "cmd_vel")))
+    driver_joint_trajectory_topic_arg = DeclareLaunchArgument("driver_joint_trajectory_topic", default_value=str(default_command_topics.get("joint_trajectory_topic", "joint_trajectory")))
+    driver_goal_pose_topic_arg = DeclareLaunchArgument("driver_goal_pose_topic", default_value=str(default_command_topics.get("goal_pose_topic", "goal_pose")))
+    driver_speech_topic_arg = DeclareLaunchArgument("driver_speech_topic", default_value=str(default_command_topics.get("speech_topic", "speech")))
 
     nao_ip = LaunchConfiguration("nao_ip")
     nao_port = LaunchConfiguration("nao_port")
+    namespace = LaunchConfiguration("namespace")
 
     # --- Launch naoqi_driver ---
     naoqi_driver_launch = IncludeLaunchDescription(
@@ -41,7 +64,16 @@ def generate_launch_description():
                 "naoqi_driver.launch.py",
             )
         ),
-        launch_arguments={"nao_ip": nao_ip, "nao_port": nao_port}.items(),
+        launch_arguments={
+            "nao_ip": nao_ip,
+            "nao_port": nao_port,
+            "namespace": namespace,
+            "driver_params_file": LaunchConfiguration("driver_params_file"),
+            "cmd_vel_topic": LaunchConfiguration("driver_cmd_vel_topic"),
+            "joint_trajectory_topic": LaunchConfiguration("driver_joint_trajectory_topic"),
+            "goal_pose_topic": LaunchConfiguration("driver_goal_pose_topic"),
+            "speech_topic": LaunchConfiguration("driver_speech_topic"),
+        }.items(),
     )
 
     # --- Node Definitions ---
@@ -202,9 +234,14 @@ def generate_launch_description():
 
     ld = LaunchDescription(
         [
-            set_boot_config_env,
             nao_ip_arg,
             nao_port_arg,
+            namespace_arg,
+            driver_params_file_arg,
+            driver_cmd_vel_topic_arg,
+            driver_joint_trajectory_topic_arg,
+            driver_goal_pose_topic_arg,
+            driver_speech_topic_arg,
             naoqi_driver_launch,
             naoqi_manipulation_node,
             naoqi_miscellaneous_node,

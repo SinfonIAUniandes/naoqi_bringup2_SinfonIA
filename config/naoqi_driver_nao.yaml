@@ -1,0 +1,117 @@
+bringup:
+  namespace: ""
+  driver:
+    boot_config_file: boot_config_NAO.json
+    command_topics:
+      cmd_vel_topic: cmd_vel
+      joint_trajectory_topic: joint_trajectory
+      goal_pose_topic: goal_pose
+      speech_topic: speech
+
+naoqi_driver:
+  ros__parameters:
+    nao_ip: 127.0.0.1
+    nao_port: 9559
+    user: nao
+    password: no_password
+    network_interface: eth0
+    qi_listen_url: tcp://0.0.0.0:0
+
+    converters.info.enabled: true
+    converters.info.frequency: 1
+    converters.info.topic: info
+
+    converters.logs.enabled: false
+    converters.logs.frequency: 1
+    converters.logs.topic: /rosout
+
+    converters.diag.enabled: false
+    converters.diag.frequency: 1
+    converters.diag.topic: /diagnostics
+
+    converters.imu_torso.enabled: false
+    converters.imu_torso.frequency: 10
+    converters.imu_torso.topic: imu/torso
+
+    converters.imu_base.enabled: false
+    converters.imu_base.frequency: 10
+    converters.imu_base.topic: imu/base
+
+    converters.front_camera.enabled: true
+    converters.front_camera.resolution: 1
+    converters.front_camera.fps: 15
+    converters.front_camera.recorder_fps: 0
+    converters.front_camera.topic: camera/front/image_raw
+    converters.front_camera.recorder_topic: camera/front
+
+    converters.bottom_camera.enabled: true
+    converters.bottom_camera.resolution: 1
+    converters.bottom_camera.fps: 15
+    converters.bottom_camera.recorder_fps: 0
+    converters.bottom_camera.topic: camera/bottom/image_raw
+    converters.bottom_camera.recorder_topic: camera/bottom
+
+    converters.depth_camera.enabled: false
+    converters.depth_camera.xtion_resolution: 1
+    converters.depth_camera.stereo_resolution: 9
+    converters.depth_camera.fps: 10
+    converters.depth_camera.recorder_fps: 0
+    converters.depth_camera.topic: camera/depth/image_raw
+    converters.depth_camera.recorder_topic: camera/depth
+
+    converters.stereo_camera.enabled: false
+    converters.stereo_camera.resolution: 15
+    converters.stereo_camera.fps: 10
+    converters.stereo_camera.recorder_fps: 0
+    converters.stereo_camera.topic: camera/stereo/image_raw
+    converters.stereo_camera.recorder_topic: camera/stereo
+
+    converters.ir_camera.enabled: false
+    converters.ir_camera.resolution: 1
+    converters.ir_camera.fps: 10
+    converters.ir_camera.recorder_fps: 0
+    converters.ir_camera.topic: camera/ir/image_raw
+    converters.ir_camera.recorder_topic: camera/ir
+
+    converters.joint_states.enabled: true
+    converters.joint_states.frequency: 5
+    converters.joint_states.topic: joint_states
+
+    converters.laser.enabled: false
+    converters.laser.frequency: 10
+    converters.laser.range_min: 0.1
+    converters.laser.range_max: 3.0
+    converters.laser.topic: laser
+
+    converters.sonar.enabled: true
+    converters.sonar.frequency: 10
+    converters.sonar.front_topic: sonar/front
+    converters.sonar.back_topic: sonar/back
+    converters.sonar.left_topic: sonar/left
+    converters.sonar.right_topic: sonar/right
+
+    converters.audio.enabled: true
+    converters.audio.frequency: 1
+    converters.audio.topic: mic
+    converters.audio.stamped_topic: mic_stamped
+    converters.audio.info_topic: mic_info
+    converters.audio.sample_rate: 16000
+    converters.audio.channel_config: 3
+    converters.audio.deinterleaved: false
+    converters.audio.channels: 1
+    converters.audio.sample_format: S16LE
+    converters.audio.bitrate: 256000
+    converters.audio.coding_format: wave
+
+    converters.bumper.enabled: false
+    converters.bumper.topic: bumper
+
+    converters.touch_hand.enabled: false
+    converters.touch_hand.topic: hand_touch
+
+    converters.touch_head.enabled: false
+    converters.touch_head.topic: head_touch
+
+    converters.odom.enabled: true
+    converters.odom.frequency: 15
+    converters.odom.topic: odom

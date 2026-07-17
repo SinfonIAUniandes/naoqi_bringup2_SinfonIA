@@ -17,6 +17,7 @@
   <exec_depend>naoqi_speech</exec_depend>
   <exec_depend>naoqi_interface</exec_depend>
   <exec_depend>web_video_server</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
   <exec_depend>naoqi_bridge_msgs</exec_depend>
   <exec_depend>naoqi_utilities_msgs</exec_depend>
 

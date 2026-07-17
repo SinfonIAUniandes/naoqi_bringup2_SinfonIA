@@ -1,1 +1,9 @@
 qi
+lark
+jinja2
+empy
+pyyaml
+numpy
+setuptools
+catkin_pkg
+colcon-common-extensions

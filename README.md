@@ -84,7 +84,9 @@ This package includes two main launch files, one for each robot type:
 *   **`naoqi_full_bringup.launch.py`**: The launch file for the **NAO** robot.
 *   **`naoqi_pepper_bringup.launch.py`**: The launch file for the **Pepper** robot.
 
-A key part of the launch process is setting the `NAOQI_DRIVER_BOOT_CONFIG_FILE` environment variable. This variable tells the `naoqi_driver` which robot-specific configuration file to load. These files (`boot_config_NAO.json` and `boot_config_PEPPER.json`) define crucial parameters like which topics to publish, sensor data rates, and joint configurations, ensuring the driver is optimized for the specific robot being used.
+A key part of the launch process is the driver configuration file in this package's `config/` directory. By default, `naoqi_full_bringup.launch.py` loads `config/naoqi_driver_nao.yaml`, and `naoqi_pepper_bringup.launch.py` loads `config/naoqi_driver_pepper.yaml`. These files contain the robot connection defaults, namespace, command topic remaps, generic driver stream enable flags, rates, and topic names without recompiling the driver.
+
+The YAML files also select the matching `naoqi_driver` boot preset (`boot_config_NAO.json` or `boot_config_PEPPER.json`) for low-level robot defaults. They are the intended place to tune ROS-facing behavior for deployments.
 
 ### Launch Command
 
@@ -104,6 +106,39 @@ You can also specify the port if it's different from the default (`9559`):
 ```bash
 ros2 launch naoqi_bringup2_sinfonIA <launch_file> nao_ip:=<your_robot_ip> nao_port:=<port>
 ```
+
+To use a different driver configuration file:
+```bash
+ros2 launch naoqi_bringup2_sinfonIA naoqi_pepper_bringup.launch.py \
+    nao_ip:=<your_robot_ip> \
+    driver_params_file:=/absolute/path/to/naoqi_driver_params.yaml
+```
+
+Command input topics are remapped from launch arguments, for example:
+```bash
+ros2 launch naoqi_bringup2_sinfonIA naoqi_pepper_bringup.launch.py \
+    nao_ip:=<your_robot_ip> \
+    driver_cmd_vel_topic:=mobile_base/cmd_vel
+```
+
+### Recording Microphone Audio
+
+The driver publishes microphone audio using `audio_common_msgs` on the topics configured in the bringup YAML file. By default, both robot configs publish raw audio on `/mic`, stamped audio on `/mic_stamped`, and stream metadata on `/mic_info`.
+
+The default audio config is 16 kHz mono, 16-bit signed little-endian (`S16LE`). To write `/mic` to a WAV file with `audio_common`:
+
+```bash
+ros2 run audio_play audio_play_node --ros-args \
+    -r audio:=/mic \
+    -p dst:="$PWD/nao_recording.wav" \
+    -p format:=wave \
+    -p channels:=1 \
+    -p sample_rate:=16000 \
+    -p depth:=16 \
+    -p sample_format:=S16LE
+```
+
+To change the microphone format, edit `converters.audio.*` in the selected config file under `config/`. For example, `converters.audio.sample_rate`, `converters.audio.channel_config`, `converters.audio.channels`, and `converters.audio.sample_format` should match the values passed to `audio_play_node`.
 
 ### Startup Sequence
 
