@@ -140,6 +140,46 @@ ros2 run audio_play audio_play_node --ros-args \
 
 To change the microphone format, edit `converters.audio.*` in the selected config file under `config/`. For example, `converters.audio.sample_rate`, `converters.audio.channel_config`, `converters.audio.channels`, and `converters.audio.sample_format` should match the values passed to `audio_play_node`.
 
+### Capability Demo Node
+
+This package includes a small demo node that touches each bringup capability family through the namespace-level API: driver command topics, miscellaneous controls, manipulation, navigation, perception, speech, tablet services, and sensor subscriptions. Start bringup first, then run:
+
+```bash
+ros2 run naoqi_bringup2_sinfonIA naoqi_capabilities_demo.py --ros-args \
+    -p robot_namespace:=nao
+```
+
+By default, the demo is interactive: before each capability is tested, it prints a numbered list of example commands and waits for your selection. Press `Enter` to use the default option, or `s` to skip that capability. After each capability, press `Enter` to continue, `b` to go back to the previous capability, or `q` to quit. At the end of each capability group, the same controls let you continue or return to the previous group.
+
+For `cmd_vel` motion examples, the selected velocity is held until you press `Enter`; the demo then immediately publishes `0,0,0` to stop the robot.
+
+The demo prints a clear banner before each capability group and pauses between actions so observers can see both terminal output and physical robot behavior. Tune the pacing with:
+
+```bash
+ros2 run naoqi_bringup2_sinfonIA naoqi_capabilities_demo.py --ros-args \
+    -p robot_namespace:=nao \
+    -p section_pause_sec:=5.0 \
+    -p step_pause_sec:=3.0
+```
+
+For unattended smoke testing, disable prompts and use each capability's default example:
+
+```bash
+ros2 run naoqi_bringup2_sinfonIA naoqi_capabilities_demo.py --ros-args \
+    -p robot_namespace:=nao \
+    -p interactive_demo:=false
+```
+
+The demo skips services that are unavailable for the current robot. Tablet calls, sound playback, and exploration calls are disabled by default because they are robot/setup dependent. Enable them explicitly when needed:
+
+```bash
+ros2 run naoqi_bringup2_sinfonIA naoqi_capabilities_demo.py --ros-args \
+    -p robot_namespace:=nao \
+    -p call_tablet_services:=true \
+    -p call_sound_playback:=true \
+    -p call_exploration_services:=true
+```
+
 ### Startup Sequence
 
 Upon launching, the system performs a specific sequence of actions to initialize the robot correctly. This is handled robustly using event handlers to ensure each step completes before the next begins.

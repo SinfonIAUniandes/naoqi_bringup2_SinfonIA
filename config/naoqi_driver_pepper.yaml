@@ -1,5 +1,5 @@
 bringup:
-  namespace: ""
+  namespace: "pepper"
   driver:
     boot_config_file: boot_config_PEPPER.json
     command_topics:

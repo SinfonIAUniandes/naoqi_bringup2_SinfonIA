@@ -7,6 +7,7 @@ from launch.actions import (
     ExecuteProcess,
     RegisterEventHandler,
     LogInfo,
+    TimerAction,
 )
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessStart, OnExecutionComplete
@@ -263,7 +264,7 @@ def generate_launch_description():
                 target_action=naoqi_miscellaneous_node,
                 on_start=[
                     LogInfo(msg="Miscellaneous node started. Beginning setup sequence..."),
-                    call_toggle_blinking,
+                    TimerAction(period=5.0, actions=[call_toggle_blinking]),
                 ],
             )
         ),
