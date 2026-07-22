@@ -1,0 +1,41 @@
+# ROS 2 build outputs
+build/
+install/
+log/
+logs/
+.colcon/
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Python environments and packaging
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+.eggs/
+*.egg
+
+# Editor and local tooling
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime and generated data
+*.bag
+*.db3
+*.mcap
+*.log
