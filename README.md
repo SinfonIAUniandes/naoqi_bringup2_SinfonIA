@@ -8,15 +8,15 @@ This is a metapackage that does not contain any nodes itself. Instead, its prima
 
 The system is composed of the following ROS 2 packages:
 
-*   **`naoqi_driver`**: The core bridge that enables communication between the ROS 2 ecosystem and the robot's native NAOqi OS.
+*   **`naoqi_driver`**: The generic ROS 2 bridge for low-latency robot streams and commands, including camera, microphone audio, odometry, sonar, joint states, `cmd_vel`, speech text, and joint trajectory commands.
 *   **`naoqi_manipulation`**: Manages robot posture (`Stand`, `Sit`, etc.), joint stiffness, hand control, and animations.
 *   **`naoqi_miscellaneous`**: Controls the robot's autonomous behaviors (Autonomous Life, Basic Awareness, Blinking) and monitors battery status.
 *   **`naoqi_navigation`**: Handles robot base movement, including relative moves and map-based navigation.
 *   **`naoqi_perception`**: Controls perception-based actions like pointing at objects and tracking faces.
-*   **`naoqi_speech`**: Manages all audio functionalities, including text-to-speech (TTS), speech recognition, and sound playback.
-    > **Note**: For the Pepper robot (NAOqi 2.5), a specific node (`naoqi_pepper_speech_node`) is used as a workaround for a compatibility issue between the newer Python libraries and the older `ALMemory` event system. This workaround also means that this node handles touch sensor events (head, hands, bumpers) for Pepper, which are typically managed by `naoqi_driver` on NAO.
+*   **`naoqi_speech`**: Manages speech capabilities, including text-to-speech (TTS), speech recognition configuration, word recognition events, volume, and sound playback.
 *   **`naoqi_interface`**: Handles interaction with the robot's tablet, such as displaying images, web pages, and video streams.
-*   **`naoqi_bridge_msgs` & `naoqi_utilities_msgs`**: Provide the custom ROS 2 message and service definitions required for communication across all packages.
+*   **`audio_common`**: Provides the standard ROS 2 audio message interfaces used by the driver microphone topics.
+*   **`naoqi_bridge_msgs` & `naoqi_utilities_msgs`**: Provide legacy and capability-specific interfaces that are still used by the remaining high-level services while the stack migrates toward standard ROS 2 interfaces where possible.
 
 ## Installation
 
@@ -25,7 +25,7 @@ To use this package, you must have a ROS 2 workspace containing this package and
 1.  **Install `vcs-tool`** (if you don't have it):
     ```bash
     sudo apt-get update && sudo apt-get install python3-vcstool
-    sudo apt-get install ros-jazzy-image-transport-plugins
+    sudo apt-get install ros-jazzy-image-transport-plugins ros-jazzy-web-video-server
     ```
 
 2.  **Create and navigate to your ROS 2 workspace:**
@@ -55,7 +55,7 @@ To use this package, you must have a ROS 2 workspace containing this package and
     ```
 
 6.  **Install Python Dependencies:**
-    Install the required Python packages using `pip`.
+    Install the required Python packages using `pip`. The ROS package dependencies should still be installed with `rosdep`; this file covers Python tooling and NAOqi helper modules that may not be resolved by rosdep in every environment.
     ```bash
     pip install -r src/naoqi_bringup2_sinfonIA/requirements.txt
     ```

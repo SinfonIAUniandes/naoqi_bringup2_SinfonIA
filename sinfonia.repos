@@ -16,6 +16,10 @@ repositories:
     type: git
     url: https://github.com/ros-naoqi/libqicore.git
     version: ros2
+  audio_common:
+    type: git
+    url: https://github.com/ros-drivers/audio_common.git
+    version: ros2
 
   # Message Packages
   naoqi_bridge_msgs:
@@ -56,6 +60,5 @@ repositories:
   # Bringup Metapackage (this package)
   naoqi_bringup2_sinfonIA:
     type: git
-    # IMPORTANT: Replace with the actual URL for your naoqi_bringup2_sinfonIA repository
     url: https://github.com/SinfonIAUniandes/naoqi_bringup2_SinfonIA.git
     version: main
